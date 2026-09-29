@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- 番茄果身：红色圆形渐变 -->
+  <defs>
+    <radialGradient id="g" cx="35%" cy="30%" r="75%">
+      <stop offset="0%" stop-color="#ff7a6b"/>
+      <stop offset="100%" stop-color="#e0442e"/>
+    </radialGradient>
+  </defs>
+  <circle cx="32" cy="36" r="24" fill="url(#g)"/>
+  <!-- 顶部叶冠 -->
+  <path d="M32 14c-2-5-7-6-7-6 0 5 3 8 7 9 4-1 7-4 7-9 0 0-5 1-7 6z" fill="#3fae6a"/>
+  <!-- 白色表盘指针，呼应"时钟" -->
+  <circle cx="32" cy="36" r="13" fill="none" stroke="#fff" stroke-width="2.5" opacity="0.9"/>
+  <path d="M32 29v7l5 3" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

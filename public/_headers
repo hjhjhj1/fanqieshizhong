@@ -1,0 +1,8 @@
+# Cloudflare Pages 缓存策略
+# Vite 构建产出的资源带内容哈希，可长期强缓存
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# HTML 入口始终校验，保证发版后用户立即拿到新版本
+/
+  Cache-Control: public, max-age=0, must-revalidate
