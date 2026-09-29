@@ -51,6 +51,29 @@ describe('composables/useTimer', () => {
     expect(timer.activeTaskId.value).toBe('task-1')
   })
 
+  it('startBreak 手动进入休息，不关联任务', () => {
+    timer.startBreak()
+    expect(timer.phase.value).toBe(PHASE_BREAK)
+    expect(timer.running.value).toBe(true)
+    expect(timer.remaining.value).toBe(3)
+    expect(timer.activeTaskId.value).toBeNull()
+  })
+
+  it('startBreak 在非空闲态调用无效', () => {
+    timer.startFocus('task-1')
+    timer.startBreak()
+    expect(timer.phase.value).toBe(PHASE_FOCUS)
+  })
+
+  it('手动休息走完触发 onBreakComplete 但不触发 onFocusComplete', () => {
+    timer.startBreak()
+    vi.advanceTimersByTime(3000)
+    timer.tick()
+    expect(onBreakComplete).toHaveBeenCalledTimes(1)
+    expect(onFocusComplete).not.toHaveBeenCalled()
+    expect(timer.phase.value).toBe(PHASE_IDLE)
+  })
+
   it('tick 随时间扣减剩余秒数并更新进度', () => {
     timer.startFocus('task-1')
     vi.advanceTimersByTime(2000)

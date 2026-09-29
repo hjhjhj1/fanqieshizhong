@@ -12,38 +12,76 @@ describe('components/TimerDial', () => {
       .find((b) => b.text().includes(keyword))
   }
 
-  it('空闲态显示默认专注时长', () => {
+  it('空闲态默认显示专注模式与专注时长', () => {
     const wrapper = mount(TimerDial, {
       props: {
         phase: PHASE_IDLE,
         running: false,
         remaining: 0,
         progress: 0,
-        idleSeconds: 1500,
+        focusSeconds: 1500,
+        breakSeconds: 300,
         taskName: ''
       }
     })
     expect(wrapper.text()).toContain('25:00')
-    expect(wrapper.text()).toContain('准备开始')
+    expect(wrapper.text()).toContain('专注准备')
+    // 默认专注模式下开始按钮存在
+    expect(findButtonByText(wrapper, '开始专注')).toBeTruthy()
   })
 
-  it('未选择任务时开始按钮禁用', () => {
+  it('切换到休息模式后显示休息时长与开始休息按钮', async () => {
     const wrapper = mount(TimerDial, {
-      props: { phase: PHASE_IDLE, idleSeconds: 1500, taskName: '' }
+      props: {
+        phase: PHASE_IDLE,
+        focusSeconds: 1500,
+        breakSeconds: 300,
+        taskName: ''
+      }
+    })
+    // 点击"休息" tab
+    const breakTab = wrapper.findAll('[role="tab"]').find((b) => b.text().includes('休息'))
+    expect(breakTab).toBeTruthy()
+    await breakTab.trigger('click')
+
+    expect(wrapper.text()).toContain('05:00')
+    expect(wrapper.text()).toContain('休息准备')
+    expect(findButtonByText(wrapper, '开始休息')).toBeTruthy()
+    // 专注按钮不再显示
+    expect(findButtonByText(wrapper, '开始专注')).toBeFalsy()
+  })
+
+  it('未选择任务时开始专注按钮禁用', () => {
+    const wrapper = mount(TimerDial, {
+      props: { phase: PHASE_IDLE, focusSeconds: 1500, breakSeconds: 300, taskName: '' }
     })
     const btn = findButtonByText(wrapper, '开始专注')
     expect(btn).toBeTruthy()
     expect(btn.attributes('disabled')).toBeDefined()
   })
 
-  it('选中任务后点击开始按钮触发 start 事件', async () => {
+  it('选中任务后点击开始专注触发 start 事件', async () => {
     const wrapper = mount(TimerDial, {
-      props: { phase: PHASE_IDLE, idleSeconds: 1500, taskName: '背单词' }
+      props: { phase: PHASE_IDLE, focusSeconds: 1500, breakSeconds: 300, taskName: '背单词' }
     })
     const btn = findButtonByText(wrapper, '开始专注')
     expect(btn.attributes('disabled')).toBeUndefined()
     await btn.trigger('click')
     expect(wrapper.emitted('start')).toHaveLength(1)
+  })
+
+  it('休息模式点击开始休息触发 start-break 事件', async () => {
+    const wrapper = mount(TimerDial, {
+      props: { phase: PHASE_IDLE, focusSeconds: 1500, breakSeconds: 300, taskName: '' }
+    })
+    // 切换到休息 tab
+    const breakTab = wrapper.findAll('[role="tab"]').find((b) => b.text().includes('休息'))
+    await breakTab.trigger('click')
+
+    const btn = findButtonByText(wrapper, '开始休息')
+    expect(btn.attributes('disabled')).toBeUndefined()
+    await btn.trigger('click')
+    expect(wrapper.emitted('start-break')).toHaveLength(1)
   })
 
   it('专注进行中显示暂停与重置按钮并触发对应事件', async () => {
@@ -53,6 +91,8 @@ describe('components/TimerDial', () => {
         running: true,
         remaining: 120,
         progress: 0.6,
+        focusSeconds: 1500,
+        breakSeconds: 300,
         taskName: '写作'
       }
     })
@@ -72,6 +112,8 @@ describe('components/TimerDial', () => {
         running: true,
         remaining: 100,
         progress: 0.2,
+        focusSeconds: 1500,
+        breakSeconds: 300,
         taskName: ''
       }
     })
@@ -87,6 +129,8 @@ describe('components/TimerDial', () => {
         running: false,
         remaining: 100,
         progress: 0.3,
+        focusSeconds: 1500,
+        breakSeconds: 300,
         taskName: '阅读'
       }
     })
@@ -94,5 +138,18 @@ describe('components/TimerDial', () => {
     expect(btn).toBeTruthy()
     await btn.trigger('click')
     expect(wrapper.emitted('resume')).toHaveLength(1)
+  })
+
+  it('空闲休息模式圆环使用绿色主题', async () => {
+    const wrapper = mount(TimerDial, {
+      props: { phase: PHASE_IDLE, focusSeconds: 1500, breakSeconds: 300, taskName: '' }
+    })
+    // 切换到休息 tab 并等待响应式更新
+    const breakTab = wrapper.findAll('[role="tab"]').find((b) => b.text().includes('休息'))
+    await breakTab.trigger('click')
+    // 第二个 circle 是进度弧，应有 leaf 色系 class
+    const circles = wrapper.findAll('svg circle')
+    expect(circles.length).toBeGreaterThanOrEqual(2)
+    expect(circles[1].classes().some((c) => c.includes('leaf'))).toBe(true)
   })
 })

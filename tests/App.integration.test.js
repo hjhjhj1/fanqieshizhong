@@ -58,7 +58,7 @@ describe('App 集成流程', () => {
 
     // 3. 中途重置：本轮作废
     await findButtonByText(wrapper, '重置').trigger('click')
-    expect(wrapper.text()).toContain('准备开始')
+    expect(wrapper.text()).toContain('专注准备')
     // 任务仍在，番茄轮次仍为 0（未计入统计）
     expect(wrapper.text()).toContain('复习英语')
     expect(wrapper.text()).toMatch(/🍅\s*0\s*轮/)

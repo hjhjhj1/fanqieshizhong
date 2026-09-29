@@ -94,6 +94,11 @@ function handleStart() {
   if (selectedId.value) timer.startFocus(selectedId.value)
 }
 
+/** 点击"开始休息"（手动休息，不关联任务） */
+function handleStartBreak() {
+  timer.startBreak()
+}
+
 /* ---- 浏览器标签标题随倒计时联动（切到后台也能看到剩余时间） ---- */
 watch(
   () => [timer.phase.value, timer.running.value, timer.remaining.value],
@@ -153,9 +158,11 @@ onMounted(() => {
         :running="timer.running.value"
         :remaining="timer.remaining.value"
         :progress="timer.progress.value"
-        :idle-seconds="settings.focusMinutes * 60"
+        :focus-seconds="settings.focusMinutes * 60"
+        :break-seconds="settings.breakMinutes * 60"
         :task-name="dialTaskName"
         @start="handleStart"
+        @start-break="handleStartBreak"
         @pause="timer.pause"
         @resume="timer.resume"
         @reset="timer.reset"

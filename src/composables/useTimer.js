@@ -5,8 +5,9 @@ import { ref, computed, onScopeDispose, getCurrentScope } from 'vue'
  *
  * 阶段流转：
  *   idle ──startFocus──▶ focus ──自然走完──▶ break ──自然走完──▶ idle
- *                            └──reset(作废)──┘    ├─reset──────▶ idle
- *                                               └─skipBreak──▶ idle（手动提前结束）
+ *     │                   └──reset(作废)──┘    ├─reset──────▶ idle
+ *     └──startBreak───────────────────────────▶ break（手动休息）
+ *                                            └─reset/skip──▶ idle
  *
  * 计时精度：不依赖"每秒累加"，而是记录结束时间戳 endAt，
  * 每次 tick 用 Date.now() 反推剩余秒数，规避标签页后台 setInterval 节流导致的偏差。
@@ -147,6 +148,23 @@ export function useTimer({
   }
 
   /**
+   * 手动开始休息（仅空闲态可调用）
+   * 不关联任务、不计统计；休息走完只响铃提示
+   */
+  function startBreak() {
+    if (phase.value !== PHASE_IDLE) return
+    const durations = getDurations ? getDurations() : { break: 0 }
+    totalSnapshot = Math.max(1, Math.floor(durations.break || 0))
+
+    phase.value = PHASE_BREAK
+    activeTaskId.value = null
+    remaining.value = totalSnapshot
+    running.value = true
+    endAt = Date.now() + totalSnapshot * 1000
+    startTicking()
+  }
+
+  /**
    * 暂停倒计时（保留剩余秒数）
    */
   function pause() {
@@ -230,6 +248,7 @@ export function useTimer({
     progress,
     // 动作
     startFocus,
+    startBreak,
     pause,
     resume,
     reset,
