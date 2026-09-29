@@ -152,18 +152,16 @@ function handleSelect(id) {
             </span>
           </span>
 
-          <!-- 删除：小圆点按钮，hover 转番茄红 -->
+          <!-- 删除按钮：× 图标，尺寸加大便于点击 -->
           <button
             type="button"
-            class="shrink-0 rounded-full p-2 transition disabled:cursor-not-allowed"
+            class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-lg text-black/30 transition hover:bg-tomato-50 hover:text-tomato-600 disabled:cursor-not-allowed disabled:opacity-40"
             :disabled="disabled"
             :aria-label="`删除任务 ${task.name}`"
             title="删除任务"
             @click.stop="handleRemove(task.id)"
           >
-            <span
-              class="block h-2 w-2 rounded-full bg-black/20 transition group-hover:bg-tomato-500"
-            />
+            ✕
           </button>
         </div>
       </li>
