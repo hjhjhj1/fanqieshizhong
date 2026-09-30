@@ -235,13 +235,18 @@ const canStartBreak = computed(() => props.phase === PHASE_IDLE && idleMode.valu
         <button type="button" class="btn-primary px-6 py-2.5" @click="emit('complete')">
           ✓ {{ t('timer.complete') }}
         </button>
-        <!-- 重置推到最右侧，与主要操作拉开距离 -->
+        <!-- 重置推到最右侧，与主要操作拉开距离；hover 时上方 tooltip 提示"本轮作废" -->
         <button
           type="button"
-          class="inline-flex items-center justify-center ml-auto px-4 py-2.5 text-sm text-gray-400 transition hover:text-gray-600 hover:bg-gray-100/60 rounded-xl"
+          class="group relative inline-flex items-center justify-center ml-auto px-4 py-2.5 text-sm text-gray-400 transition hover:text-gray-600 hover:bg-gray-100/60 rounded-xl"
           @click="emit('reset')"
         >
-          {{ t('timer.resetVoid') }}
+          {{ t('timer.reset') }}
+          <span
+            class="pointer-events-none absolute bottom-full left-1/2 mb-2 -translate-x-1/2 whitespace-nowrap rounded-md bg-gray-800 px-2 py-1 text-xs text-white opacity-0 shadow-md transition-opacity group-hover:opacity-100"
+          >
+            {{ t('timer.resetVoidHint') }}
+          </span>
         </button>
       </template>
 
@@ -255,10 +260,15 @@ const canStartBreak = computed(() => props.phase === PHASE_IDLE && idleMode.valu
         </button>
         <button
           type="button"
-          class="inline-flex items-center justify-center ml-auto px-4 py-2.5 text-sm text-gray-400 transition hover:text-gray-600 hover:bg-gray-100/60 rounded-xl"
+          class="group relative inline-flex items-center justify-center ml-auto px-4 py-2.5 text-sm text-gray-400 transition hover:text-gray-600 hover:bg-gray-100/60 rounded-xl"
           @click="emit('reset')"
         >
-          {{ t('timer.resetVoid') }}
+          {{ t('timer.reset') }}
+          <span
+            class="pointer-events-none absolute bottom-full left-1/2 mb-2 -translate-x-1/2 whitespace-nowrap rounded-md bg-gray-800 px-2 py-1 text-xs text-white opacity-0 shadow-md transition-opacity group-hover:opacity-100"
+          >
+            {{ t('timer.resetVoidHint') }}
+          </span>
         </button>
       </template>
 

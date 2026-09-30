@@ -41,6 +41,7 @@ export default {
     resumeFocus: '▶ Resume Focus',
     resumeBreak: '▶ Resume Break',
     resetVoid: '↺ Reset (round voided)',
+    resetVoidHint: 'Round voided',
     reset: '↺ Reset',
     complete: 'Complete & Save',
     skipBreak: '⏹ End Break Early',

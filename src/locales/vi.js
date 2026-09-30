@@ -41,6 +41,7 @@ export default {
     resumeFocus: '▶ Tiếp tục tập trung',
     resumeBreak: '▶ Tiếp tục nghỉ',
     resetVoid: '↺ Đặt lại (vòng này hủy)',
+    resetVoidHint: 'Vòng này hủy',
     reset: '↺ Đặt lại',
     complete: 'Hoàn thành và Lưu',
     skipBreak: '⏹ Kết thúc nghỉ sớm',

@@ -41,6 +41,7 @@ export default {
     resumeFocus: '▶ 집중 계속',
     resumeBreak: '▶ 휴식 계속',
     resetVoid: '↺ 초기화(이번 라운드 무효)',
+    resetVoidHint: '이번 라운드 무효',
     reset: '↺ 초기화',
     complete: '완료 및 저장',
     skipBreak: '⏹ 휴식 조기 종료',

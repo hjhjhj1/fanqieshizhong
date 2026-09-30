@@ -41,6 +41,7 @@ export default {
     resumeFocus: '▶ Continuar enfoque',
     resumeBreak: '▶ Continuar descanso',
     resetVoid: '↺ Reiniciar (ronda anulada)',
+    resetVoidHint: 'Ronda anulada',
     reset: '↺ Reiniciar',
     complete: 'Completar y Guardar',
     skipBreak: '⏹ Terminar descanso antes',

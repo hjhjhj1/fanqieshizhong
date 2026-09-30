@@ -41,6 +41,7 @@ export default {
     resumeFocus: '▶ 集中を再開',
     resumeBreak: '▶ 休憩を再開',
     resetVoid: '↺ リセット（このラウンドは無効）',
+    resetVoidHint: 'このラウンドは無効',
     reset: '↺ リセット',
     complete: '完了して記録',
     skipBreak: '⏹ 休憩を早めに終了',

@@ -41,6 +41,7 @@ export default {
     resumeFocus: '▶ Fokus fortsetzen',
     resumeBreak: '▶ Pause fortsetzen',
     resetVoid: '↺ Zurücksetzen (Runde verworfen)',
+    resetVoidHint: 'Runde verworfen',
     reset: '↺ Zurücksetzen',
     complete: 'Abschließen & Speichern',
     skipBreak: '⏹ Pause vorzeitig beenden',

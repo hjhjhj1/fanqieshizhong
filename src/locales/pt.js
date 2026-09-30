@@ -41,6 +41,7 @@ export default {
     resumeFocus: '▶ Continuar foco',
     resumeBreak: '▶ Continuar pausa',
     resetVoid: '↺ Reiniciar (rodada anulada)',
+    resetVoidHint: 'Rodada anulada',
     reset: '↺ Reiniciar',
     complete: 'Concluir e Salvar',
     skipBreak: '⏹ Encerrar pausa mais cedo',

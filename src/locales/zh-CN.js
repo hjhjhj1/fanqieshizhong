@@ -41,6 +41,7 @@ export default {
     resumeFocus: '▶ 继续专注',
     resumeBreak: '▶ 继续休息',
     resetVoid: '↺ 重置（本轮作废）',
+    resetVoidHint: '本轮作废',
     reset: '↺ 重置',
     complete: '完成并记录',
     skipBreak: '⏹ 提前结束休息',

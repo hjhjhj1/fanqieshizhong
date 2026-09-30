@@ -41,6 +41,7 @@ export default {
     resumeFocus: '▶ Reprendre le focus',
     resumeBreak: '▶ Reprendre la pause',
     resetVoid: '↺ Réinitialiser (round annulé)',
+    resetVoidHint: 'Round annulé',
     reset: '↺ Réinitialiser',
     complete: 'Terminer et Enregistrer',
     skipBreak: '⏹ Terminer la pause plus tôt',

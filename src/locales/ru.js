@@ -41,6 +41,7 @@ export default {
     resumeFocus: '▶ Продолжить фокус',
     resumeBreak: '▶ Продолжить отдых',
     resetVoid: '↺ Сброс (раунд не засчитан)',
+    resetVoidHint: 'Раунд не засчитан',
     reset: '↺ Сброс',
     complete: 'Завершить и Сохранить',
     skipBreak: '⏹ Завершить отдых досрочно',
