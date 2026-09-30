@@ -74,7 +74,6 @@ export default {
     notifyLegend: 'Notificaciones de escritorio',
     notifyToggle: 'Activar notificaciones de escritorio',
     requestPermission: 'Solicitar permiso',
-    requesting: 'Solicitando…',
     sendTest: 'Enviar notificación de prueba',
     resetDefaults: 'Restaurar valores predeterminados',
     done: 'Listo',

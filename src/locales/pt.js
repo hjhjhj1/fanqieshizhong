@@ -74,7 +74,6 @@ export default {
     notifyLegend: 'Notificações de desktop',
     notifyToggle: 'Ativar notificações de desktop',
     requestPermission: 'Solicitar permissão',
-    requesting: 'Solicitando…',
     sendTest: 'Enviar notificação de teste',
     resetDefaults: 'Restaurar padrões',
     done: 'Concluir',

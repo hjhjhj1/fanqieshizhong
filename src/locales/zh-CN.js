@@ -74,15 +74,14 @@ export default {
     notifyLegend: '桌面通知',
     notifyToggle: '开启桌面通知提醒',
     requestPermission: '申请通知权限',
-    requesting: '申请中…',
     sendTest: '发送测试通知',
     resetDefaults: '恢复默认设置',
     done: '完成',
     permission: {
       granted: '已授权，专注与休息结束时将弹出桌面通知',
-      denied: '通知权限已被浏览器拒绝，请在浏览器站点设置中手动开启',
+      denied: '通知权限已被浏览器拒绝。请点击地址栏左侧的 🔒 图标，在「站点设置」中将「通知」改为「允许」，然后刷新页面',
       unsupported: '当前浏览器不支持桌面通知',
-      defaultHint: '尚未授权，开启后可在标签页后台时收到提醒'
+      defaultHint: '尚未授权。点击左侧按钮申请；若浏览器未弹出授权框，请点击地址栏左侧 🔒 图标，在「站点设置」中手动允许通知'
     }
   },
   sounds: {

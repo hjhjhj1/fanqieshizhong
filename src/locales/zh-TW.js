@@ -73,7 +73,6 @@ export default {
     notifyLegend: '桌面通知',
     notifyToggle: '開啟桌面通知提醒',
     requestPermission: '申請通知權限',
-    requesting: '申請中…',
     sendTest: '傳送測試通知',
     resetDefaults: '恢復預設設定',
     done: '完成',

@@ -74,7 +74,6 @@ export default {
     notifyLegend: 'Desktop Notifications',
     notifyToggle: 'Enable desktop notifications',
     requestPermission: 'Request permission',
-    requesting: 'Requesting…',
     sendTest: 'Send test notification',
     resetDefaults: 'Reset to defaults',
     done: 'Done',
@@ -82,10 +81,10 @@ export default {
       granted:
         'Granted — a desktop notification will appear when focus or break ends',
       denied:
-        'Notifications are blocked by the browser. Enable them manually in the site settings',
+        'Notifications are blocked. Click the 🔒 icon in the address bar, open "Site settings", set "Notifications" to "Allow", then refresh the page',
       unsupported: 'This browser does not support desktop notifications',
       defaultHint:
-        'Not granted yet — enable to get reminded while the tab is in the background'
+        'Not granted yet. Click the button to request; if no prompt appears, click the 🔒 icon in the address bar and allow notifications in "Site settings"'
     }
   },
   sounds: {

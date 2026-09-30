@@ -74,7 +74,6 @@ export default {
     notifyLegend: '데스크톱 알림',
     notifyToggle: '데스크톱 알림 켜기',
     requestPermission: '알림 권한 요청',
-    requesting: '요청 중…',
     sendTest: '테스트 알림 보내기',
     resetDefaults: '기본값으로 복원',
     done: '완료',
