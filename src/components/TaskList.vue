@@ -111,8 +111,8 @@ function handleSelect(id) {
       {{ errorMsg }}
     </p>
 
-    <!-- 任务列表：px-1 给 ring 边框留出显示空间，避免被 overflow 裁剪 -->
-    <ul class="flex-1 space-y-2 overflow-y-auto px-1" role="list">
+    <!-- 任务列表：px-1 py-1 给 ring 边框（box-shadow）四周留出显示空间，避免被 overflow 裁剪 -->
+    <ul class="flex-1 space-y-2 overflow-y-auto px-1 py-1" role="list">
       <li v-for="task in tasks" :key="task.id">
         <div
           class="group flex cursor-pointer items-center gap-3 rounded-xl px-3 py-3 transition"
