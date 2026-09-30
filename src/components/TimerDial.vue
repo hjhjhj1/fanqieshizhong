@@ -226,34 +226,35 @@ const canStartBreak = computed(() => props.phase === PHASE_IDLE && idleMode.valu
         {{ t('timer.startBreak') }}
       </button>
 
-      <!-- 专注进行中：暂停 / 完成（绿色突出） / 重置（小号弱化） -->
+      <!-- 专注进行中：暂停 / 完成（绿色突出） / 重置（浅灰弱化） -->
+      <!-- 三按钮同高对齐，仅通过颜色与字号区分权重 -->
       <template v-else-if="phase === 'focus' && running">
-        <button type="button" class="btn-ghost px-6 py-3" @click="emit('pause')">
+        <button type="button" class="btn-ghost px-5 py-2.5" @click="emit('pause')">
           {{ t('timer.pause') }}
         </button>
-        <button type="button" class="btn-leaf px-7 py-3 text-base" @click="emit('complete')">
+        <button type="button" class="btn-leaf px-6 py-2.5" @click="emit('complete')">
           ✅ {{ t('timer.complete') }}
         </button>
         <button
           type="button"
-          class="btn-ghost px-3 py-1.5 text-xs text-gray-400 ring-gray-200 hover:bg-gray-50"
+          class="btn-ghost px-4 py-2.5 text-sm text-gray-400 ring-gray-200 hover:bg-gray-50 hover:text-gray-600"
           @click="emit('reset')"
         >
           {{ t('timer.resetVoid') }}
         </button>
       </template>
 
-      <!-- 专注暂停：继续（红色主） / 完成（绿色突出） / 重置（小号弱化） -->
+      <!-- 专注暂停：继续（红色主） / 完成（绿色突出） / 重置（浅灰弱化） -->
       <template v-else-if="phase === 'focus' && !running">
-        <button type="button" class="btn-primary px-8 py-3 text-base" @click="emit('resume')">
+        <button type="button" class="btn-primary px-7 py-2.5" @click="emit('resume')">
           {{ t('timer.resumeFocus') }}
         </button>
-        <button type="button" class="btn-leaf px-6 py-3" @click="emit('complete')">
+        <button type="button" class="btn-leaf px-6 py-2.5" @click="emit('complete')">
           ✅ {{ t('timer.complete') }}
         </button>
         <button
           type="button"
-          class="btn-ghost px-3 py-1.5 text-xs text-gray-400 ring-gray-200 hover:bg-gray-50"
+          class="btn-ghost px-4 py-2.5 text-sm text-gray-400 ring-gray-200 hover:bg-gray-50 hover:text-gray-600"
           @click="emit('reset')"
         >
           {{ t('timer.resetVoid') }}
