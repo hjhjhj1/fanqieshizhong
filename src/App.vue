@@ -174,6 +174,8 @@ async function handleStartBreak() {
 /** 语言切换器变更 */
 function handleLocaleChange(event) {
   setLocale(event.target.value)
+  // 选择后让 select 失焦，消除浏览器默认的选中高亮态
+  event.target.blur()
 }
 
 /* ---- 浏览器标签标题随倒计时联动（切到后台也能看到剩余时间） ----
@@ -223,21 +225,30 @@ onMounted(() => {
         </div>
       </div>
       <div class="flex items-center gap-2">
-        <!-- 语言切换器：原生 select，展示各语言原生名称 -->
-        <select
-          :value="locale"
-          class="btn-ghost cursor-pointer appearance-none text-sm"
-          :aria-label="t('app.language')"
-          @change="handleLocaleChange"
-        >
-          <option
-            v-for="l in SUPPORTED_LOCALES"
-            :key="l.code"
-            :value="l.code"
+        <!-- 语言切换器：原生 select，展示各语言原生名称；选择后自动失焦，自定义下箭头 -->
+        <div class="relative">
+          <select
+            :value="locale"
+            class="btn-ghost cursor-pointer appearance-none pr-8 text-sm"
+            :aria-label="t('app.language')"
+            @change="handleLocaleChange"
           >
-            {{ l.name }}
-          </option>
-        </select>
+            <option
+              v-for="l in SUPPORTED_LOCALES"
+              :key="l.code"
+              :value="l.code"
+            >
+              {{ l.name }}
+            </option>
+          </select>
+          <!-- 自定义下箭头：绝对定位在 select 右侧，pointer-events-none 让点击穿透到 select -->
+          <span
+            class="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-gray-400"
+            aria-hidden="true"
+          >
+            ▾
+          </span>
+        </div>
         <button
           type="button"
           class="btn-ghost"
