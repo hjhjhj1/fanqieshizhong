@@ -138,7 +138,7 @@ const hoverText = computed(() => {
       <svg
         :width="barWidth * series.length + (series.length - 1) * BAR_GAP + 16"
         :height="CHART_HEIGHT + 36"
-        class="block"
+        class="mx-auto block"
         role="img"
         :aria-label="t('stats.chartAriaLabel')"
       >
