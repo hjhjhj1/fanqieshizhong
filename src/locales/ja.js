@@ -42,6 +42,7 @@ export default {
     resumeBreak: '▶ 休憩を再開',
     resetVoid: '↺ リセット（このラウンドは無効）',
     reset: '↺ リセット',
+    complete: '完了して記録',
     skipBreak: '⏹ 休憩を早めに終了',
     stopRinging: '音を止める'
   },

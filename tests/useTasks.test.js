@@ -87,6 +87,20 @@ describe('composables/useTasks', () => {
     expect(tasks.value[0].totalFocusSeconds).toBe(3000)
   })
 
+  it('addFocusRecord countTomato=false 时只累加时长不计数番茄', () => {
+    addTask('阅读')
+    const id = tasks.value[0].id
+    // 提前完成：不计数番茄，只记录时长
+    addFocusRecord(id, 600, false)
+    expect(tasks.value[0].tomatoCount).toBe(0)
+    expect(tasks.value[0].totalFocusSeconds).toBe(600)
+
+    // 正常完成：计数番茄
+    addFocusRecord(id, 1500, true)
+    expect(tasks.value[0].tomatoCount).toBe(1)
+    expect(tasks.value[0].totalFocusSeconds).toBe(2100)
+  })
+
   it('对不存在的任务记录专注时静默忽略', () => {
     expect(() => addFocusRecord('ghost', 100)).not.toThrow()
   })

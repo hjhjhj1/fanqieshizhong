@@ -42,6 +42,7 @@ export default {
     resumeBreak: '▶ Reprendre la pause',
     resetVoid: '↺ Réinitialiser (round annulé)',
     reset: '↺ Réinitialiser',
+    complete: 'Terminer et Enregistrer',
     skipBreak: '⏹ Terminer la pause plus tôt',
     stopRinging: '⏹ Arrêter la sonnerie'
   },

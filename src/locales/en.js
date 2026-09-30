@@ -42,6 +42,7 @@ export default {
     resumeBreak: '▶ Resume Break',
     resetVoid: '↺ Reset (round voided)',
     reset: '↺ Reset',
+    complete: 'Complete & Save',
     skipBreak: '⏹ End Break Early',
     stopRinging: 'Stop Ringing'
   },

@@ -92,13 +92,16 @@ function getDurations() {
 }
 
 /**
- * 专注倒计时自然走完：
- * 1) 任务统计 +1 轮、累计专注时长 2) 持续响铃（可手动停止） 3) 桌面通知
- * @param {string} taskId 完成专注的任务 ID
- * @param {number} seconds 本轮专注秒数
+ * 专注完成回调（自然走完 或 提前完成 都会触发）
+ * 1) 任务统计：自然完成番茄 +1；提前完成只累加时长不计数番茄
+ * 2) 记录今日专注时长 3) 持续响铃（可手动停止） 4) 桌面通知
+ * @param {string} taskId 关联任务 ID
+ * @param {number} seconds 本轮专注秒数（提前完成时为实际已专注时长）
+ * @param {boolean} [isEarly=false] 是否提前完成
  */
-function handleFocusComplete(taskId, seconds) {
-  if (taskId) addFocusRecord(taskId, seconds)
+function handleFocusComplete(taskId, seconds, isEarly = false) {
+  // 提前完成不计数番茄，只记录实际专注时长
+  if (taskId) addFocusRecord(taskId, seconds, !isEarly)
   // 同步记录到"今日"统计，供历史图表展示
   addStatsRecord(seconds)
   startRinging()
@@ -277,6 +280,7 @@ onMounted(() => {
           @resume="timer.resume"
           @reset="timer.reset"
           @skip="timer.skipBreak"
+          @complete="timer.complete"
         />
         <!-- 响铃停止按钮：阶段结束后持续响铃 60 秒，用户可手动停止 -->
         <button

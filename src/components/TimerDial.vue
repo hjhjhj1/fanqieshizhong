@@ -31,7 +31,7 @@ const props = defineProps({
   taskName: { type: String, default: '' }
 })
 
-const emit = defineEmits(['start', 'start-break', 'pause', 'resume', 'reset', 'skip'])
+const emit = defineEmits(['start', 'start-break', 'pause', 'resume', 'reset', 'skip', 'complete'])
 
 /**
  * 空闲态模式切换：'focus' 或 'break'
@@ -226,20 +226,26 @@ const canStartBreak = computed(() => props.phase === PHASE_IDLE && idleMode.valu
         {{ t('timer.startBreak') }}
       </button>
 
-      <!-- 专注进行中：暂停 / 重置 -->
+      <!-- 专注进行中：暂停 / 完成 / 重置 -->
       <template v-else-if="phase === 'focus' && running">
         <button type="button" class="btn-ghost px-6 py-3" @click="emit('pause')">
           {{ t('timer.pause') }}
+        </button>
+        <button type="button" class="btn-ghost px-6 py-3" @click="emit('complete')">
+          ✅ {{ t('timer.complete') }}
         </button>
         <button type="button" class="btn-ghost px-6 py-3" @click="emit('reset')">
           {{ t('timer.resetVoid') }}
         </button>
       </template>
 
-      <!-- 专注暂停：继续 / 重置 -->
+      <!-- 专注暂停：继续 / 完成 / 重置 -->
       <template v-else-if="phase === 'focus' && !running">
         <button type="button" class="btn-primary px-8 py-3 text-base" @click="emit('resume')">
           {{ t('timer.resumeFocus') }}
+        </button>
+        <button type="button" class="btn-ghost px-6 py-3" @click="emit('complete')">
+          ✅ {{ t('timer.complete') }}
         </button>
         <button type="button" class="btn-ghost px-6 py-3" @click="emit('reset')">
           {{ t('timer.resetVoid') }}

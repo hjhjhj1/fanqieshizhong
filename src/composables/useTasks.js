@@ -132,14 +132,15 @@ export function useTasks() {
 
   /**
    * 记录一轮已完成的专注：番茄轮次 +1、累计专注时长增加
-   * 仅在专注倒计时正常走完时调用（中途重置不计入）
+   * 专注完成时记录统计
    * @param {string} id 任务 ID
    * @param {number} seconds 本轮专注秒数
+   * @param {boolean} [countTomato=true] 是否计数番茄轮次；提前完成时传 false
    */
-  function addFocusRecord(id, seconds) {
+  function addFocusRecord(id, seconds, countTomato = true) {
     const task = tasks.value.find((t) => t.id === id)
     if (!task) return
-    task.tomatoCount += 1
+    if (countTomato) task.tomatoCount += 1
     task.totalFocusSeconds += Math.max(0, Math.floor(seconds))
   }
 

@@ -42,6 +42,7 @@ export default {
     resumeBreak: '▶ Pause fortsetzen',
     resetVoid: '↺ Zurücksetzen (Runde verworfen)',
     reset: '↺ Zurücksetzen',
+    complete: 'Abschließen & Speichern',
     skipBreak: '⏹ Pause vorzeitig beenden',
     stopRinging: '⏹ Klingelton stoppen'
   },

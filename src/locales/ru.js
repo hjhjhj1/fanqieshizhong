@@ -42,6 +42,7 @@ export default {
     resumeBreak: '▶ Продолжить отдых',
     resetVoid: '↺ Сброс (раунд не засчитан)',
     reset: '↺ Сброс',
+    complete: 'Завершить и Сохранить',
     skipBreak: '⏹ Завершить отдых досрочно',
     stopRinging: '⏹ Остановить звук'
   },

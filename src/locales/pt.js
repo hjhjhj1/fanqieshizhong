@@ -42,6 +42,7 @@ export default {
     resumeBreak: '▶ Continuar pausa',
     resetVoid: '↺ Reiniciar (rodada anulada)',
     reset: '↺ Reiniciar',
+    complete: 'Concluir e Salvar',
     skipBreak: '⏹ Encerrar pausa mais cedo',
     stopRinging: '⏹ Parar som'
   },

@@ -42,6 +42,7 @@ export default {
     resumeBreak: '▶ 继续休息',
     resetVoid: '↺ 重置（本轮作废）',
     reset: '↺ 重置',
+    complete: '完成并记录',
     skipBreak: '⏹ 提前结束休息',
     stopRinging: '停止响铃'
   },

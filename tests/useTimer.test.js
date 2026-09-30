@@ -106,7 +106,8 @@ describe('composables/useTimer', () => {
     timer.tick()
 
     expect(onFocusComplete).toHaveBeenCalledTimes(1)
-    expect(onFocusComplete).toHaveBeenCalledWith('task-1', 5)
+    // 自然完成：第三个参数 false 表示计数番茄
+    expect(onFocusComplete).toHaveBeenCalledWith('task-1', 5, false)
     expect(timer.phase.value).toBe(PHASE_BREAK)
     expect(timer.running.value).toBe(true)
     expect(timer.remaining.value).toBe(3)
@@ -159,6 +160,51 @@ describe('composables/useTimer', () => {
     timer.startFocus('task-1')
     timer.skipBreak()
     expect(timer.phase.value).toBe(PHASE_FOCUS)
+  })
+
+  it('complete 提前完成专注：按实际已专注时长记录并进入休息', () => {
+    timer.startFocus('task-1')
+    // 推进 2 秒，剩余 3 秒
+    vi.advanceTimersByTime(2000)
+    timer.tick()
+
+    timer.complete()
+
+    // 回调应收到实际已专注时长 2 秒，且 isEarly=true
+    expect(onFocusComplete).toHaveBeenCalledTimes(1)
+    expect(onFocusComplete).toHaveBeenCalledWith('task-1', 2, true)
+    // 自动进入休息
+    expect(timer.phase.value).toBe(PHASE_BREAK)
+    expect(timer.running.value).toBe(true)
+    expect(timer.remaining.value).toBe(3)
+  })
+
+  it('complete 在专注暂停时也能记录已专注时长', () => {
+    timer.startFocus('task-1')
+    vi.advanceTimersByTime(2000)
+    timer.tick()
+    timer.pause() // 暂停后 remaining 冻结为 3
+
+    timer.complete()
+
+    expect(onFocusComplete).toHaveBeenCalledWith('task-1', 2, true)
+    expect(timer.phase.value).toBe(PHASE_BREAK)
+  })
+
+  it('complete 已专注时长为 0 时不触发统计回调', () => {
+    timer.startFocus('task-1') // 刚启动，已专注 0 秒
+    timer.complete()
+
+    expect(onFocusComplete).not.toHaveBeenCalled()
+    // 仍进入休息
+    expect(timer.phase.value).toBe(PHASE_BREAK)
+  })
+
+  it('非专注阶段调用 complete 无效', () => {
+    timer.startBreak() // 休息阶段
+    timer.complete()
+    expect(timer.phase.value).toBe(PHASE_BREAK)
+    expect(onFocusComplete).not.toHaveBeenCalled()
   })
 
   it('空闲态 resume 无效', () => {

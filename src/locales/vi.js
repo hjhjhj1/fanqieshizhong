@@ -42,6 +42,7 @@ export default {
     resumeBreak: '▶ Tiếp tục nghỉ',
     resetVoid: '↺ Đặt lại (vòng này hủy)',
     reset: '↺ Đặt lại',
+    complete: 'Hoàn thành và Lưu',
     skipBreak: '⏹ Kết thúc nghỉ sớm',
     stopRinging: '⏹ Dừng chuông'
   },

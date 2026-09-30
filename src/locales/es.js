@@ -42,6 +42,7 @@ export default {
     resumeBreak: '▶ Continuar descanso',
     resetVoid: '↺ Reiniciar (ronda anulada)',
     reset: '↺ Reiniciar',
+    complete: 'Completar y Guardar',
     skipBreak: '⏹ Terminar descanso antes',
     stopRinging: '⏹ Detener sonido'
   },

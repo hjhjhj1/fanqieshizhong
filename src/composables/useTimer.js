@@ -100,10 +100,11 @@ export function useTimer({
 
     if (phase.value === PHASE_FOCUS) {
       // —— 专注完成：先回调统计（番茄 +1、累计专注时长），再自动进入休息 ——
+      // 第三个参数 false 表示非提前完成（完整走完一轮，计数番茄）
       const finishedTaskId = activeTaskId.value
       const focusSeconds = totalSnapshot
       try {
-        onFocusComplete?.(finishedTaskId, focusSeconds)
+        onFocusComplete?.(finishedTaskId, focusSeconds, false)
       } catch (err) {
         console.error('[timer] onFocusComplete 回调异常', err)
       }
@@ -204,6 +205,39 @@ export function useTimer({
   }
 
   /**
+   * 提前完成当前专注（区别于重置 reset）：
+   * - 按实际已专注时长记录统计，但不计数番茄轮次
+   * - 然后自动进入休息（与正常完成流转一致）
+   * 仅专注阶段（PHASE_FOCUS）可调用，运行中或暂停中均可
+   */
+  function complete() {
+    if (phase.value !== PHASE_FOCUS) return
+    stopTicking()
+    running.value = false
+
+    // 已专注秒数 = 本轮总时长 - 当前剩余时长
+    const elapsedSeconds = Math.max(0, totalSnapshot - remaining.value)
+    const finishedTaskId = activeTaskId.value
+    if (elapsedSeconds > 0) {
+      // 第三个参数 true 表示提前完成：记录时长但不计数番茄
+      try {
+        onFocusComplete?.(finishedTaskId, elapsedSeconds, true)
+      } catch (err) {
+        console.error('[timer] onFocusComplete 回调异常', err)
+      }
+    }
+
+    // 流转到休息（与 completePhase 中专注完成后的逻辑一致）
+    const durations = getDurations ? getDurations() : { break: 0 }
+    totalSnapshot = Math.max(1, Math.floor(durations.break || 0))
+    phase.value = PHASE_BREAK
+    remaining.value = totalSnapshot
+    running.value = true
+    endAt = Date.now() + totalSnapshot * 1000
+    startTicking()
+  }
+
+  /**
    * 手动提前结束休息（不触发休息完成回调，不响铃）
    */
   function skipBreak() {
@@ -253,6 +287,7 @@ export function useTimer({
     resume,
     reset,
     skipBreak,
+    complete,
     // 测试 / 外部校准用
     tick
   }
