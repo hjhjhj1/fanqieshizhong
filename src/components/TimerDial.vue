@@ -237,7 +237,7 @@ const canStartBreak = computed(() => props.phase === PHASE_IDLE && idleMode.valu
         </button>
         <button
           type="button"
-          class="px-4 py-2.5 text-sm text-gray-400 transition hover:text-gray-600 hover:bg-gray-100/60 rounded-xl"
+          class="inline-flex items-center justify-center px-4 py-2.5 text-sm text-gray-400 transition hover:text-gray-600 hover:bg-gray-100/60 rounded-xl"
           @click="emit('reset')"
         >
           {{ t('timer.resetVoid') }}
@@ -254,7 +254,7 @@ const canStartBreak = computed(() => props.phase === PHASE_IDLE && idleMode.valu
         </button>
         <button
           type="button"
-          class="px-4 py-2.5 text-sm text-gray-400 transition hover:text-gray-600 hover:bg-gray-100/60 rounded-xl"
+          class="inline-flex items-center justify-center px-4 py-2.5 text-sm text-gray-400 transition hover:text-gray-600 hover:bg-gray-100/60 rounded-xl"
           @click="emit('reset')"
         >
           {{ t('timer.resetVoid') }}
