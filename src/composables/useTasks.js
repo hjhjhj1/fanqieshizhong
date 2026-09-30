@@ -1,5 +1,6 @@
 import { ref, computed, watch } from 'vue'
 import { loadStorage, saveStorage } from '../utils/storage.js'
+import { t } from '../i18n/index.js'
 
 /** localStorage 存储键 */
 const STORAGE_KEY = 'tasks-v1'
@@ -90,9 +91,10 @@ export function useTasks() {
    */
   function addTask(name) {
     const trimmed = String(name ?? '').trim()
-    if (!trimmed) return { ok: false, error: '任务名称不能为空' }
+    // 错误消息为瞬时提示，按当前语言快照翻译即可
+    if (!trimmed) return { ok: false, error: t('tasks.errorEmpty') }
     if (trimmed.length > MAX_NAME_LENGTH) {
-      return { ok: false, error: `任务名称不能超过 ${MAX_NAME_LENGTH} 个字符` }
+      return { ok: false, error: t('tasks.errorTooLong', { max: MAX_NAME_LENGTH }) }
     }
 
     const task = {

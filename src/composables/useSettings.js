@@ -4,12 +4,12 @@ import { loadStorage, saveStorage } from '../utils/storage.js'
 /** localStorage 存储键 */
 const STORAGE_KEY = 'settings-v1'
 
-/** 可选提示音清单（实际音色由 useSound 用 Web Audio 合成，无需音频文件） */
+/** 可选提示音清单（名称文案见语言包 sounds.*；实际音色由 useSound 用 Web Audio 合成，无需音频文件） */
 export const SOUND_OPTIONS = [
-  { value: 'beep', label: '经典蜂鸣' },
-  { value: 'chime', label: '清脆风铃' },
-  { value: 'bell', label: '悠扬钟声' },
-  { value: 'digital', label: '电子音阶' }
+  { value: 'beep' },
+  { value: 'chime' },
+  { value: 'bell' },
+  { value: 'digital' }
 ]
 
 /** 默认设置：经典番茄工作法 25 分钟专注 + 5 分钟休息 */

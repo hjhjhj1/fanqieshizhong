@@ -1,4 +1,5 @@
 import { ref } from 'vue'
+import { t, locale } from '../i18n/index.js'
 
 /**
  * 桌面通知 composable
@@ -45,7 +46,8 @@ export function useNotification() {
         icon: '/favicon.svg',
         // 标签相同的通知会合并替换，避免轮次多了刷屏
         tag: 'fanqie-timer',
-        lang: 'zh-CN'
+        // 通知语言跟随当前界面语言
+        lang: locale.value
       })
       // 点击通知聚焦回页面
       notification.onclick = () => {
@@ -71,7 +73,7 @@ export function useNotification() {
       const result = await requestPermission()
       if (result !== 'granted') return false
     }
-    return notify('番茄专注计时器', '通知已开启，专注结束时会在这里提醒你 🍅')
+    return notify(t('notify.testTitle'), t('notify.testBody'))
   }
 
   return { supported, permission, requestPermission, notify, test }

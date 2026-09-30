@@ -1,5 +1,6 @@
 <script setup>
 import { ref, computed, watch, onMounted } from 'vue'
+import { useI18n } from 'vue-i18n'
 import TaskList from './components/TaskList.vue'
 import TimerDial from './components/TimerDial.vue'
 import SettingsPanel from './components/SettingsPanel.vue'
@@ -9,12 +10,15 @@ import { useTimer, PHASE_IDLE, PHASE_FOCUS } from './composables/useTimer.js'
 import { useSound } from './composables/useSound.js'
 import { useNotification } from './composables/useNotification.js'
 import { formatClock } from './utils/time.js'
+import { SUPPORTED_LOCALES, setLocale } from './i18n/index.js'
 
 /**
  * 根组件：组装任务列表、计时表盘、设置面板三大模块，
  * 并负责"专注/休息自然结束"时的提示音、桌面通知、浏览器标题联动。
+ * 头部含语言切换器（11 种语言，切换后即时生效并持久化）。
  */
 
+const { t, locale } = useI18n()
 const { tasks, selectedId, selectedTask, addFocusRecord } = useTasks()
 const { settings } = useSettings()
 const { unlock, play } = useSound()
@@ -29,8 +33,8 @@ const settingsOpen = ref(false)
  */
 const faviconUrl = '/favicon.svg'
 
-/** 空闲态浏览器标题（计时结束后恢复） */
-const DEFAULT_TITLE = '番茄专注计时器 - 在线番茄钟'
+/** 空闲态浏览器标题（计时结束后恢复，随语言切换） */
+const defaultTitle = computed(() => t('app.defaultTitle'))
 
 /**
  * 供计时器读取当前设置的时长（秒）
@@ -53,7 +57,10 @@ function handleFocusComplete(taskId, seconds) {
   if (taskId) addFocusRecord(taskId, seconds)
   if (settings.soundEnabled) play(settings.soundType, settings.volume)
   if (settings.notificationEnabled) {
-    notify('专注完成 🎉', `本轮专注已完成，休息 ${settings.breakMinutes} 分钟吧`)
+    notify(
+      t('notify.focusDoneTitle'),
+      t('notify.focusDoneBody', { minutes: settings.breakMinutes })
+    )
   }
 }
 
@@ -63,7 +70,7 @@ function handleFocusComplete(taskId, seconds) {
 function handleBreakComplete() {
   if (settings.soundEnabled) play(settings.soundType, settings.volume)
   if (settings.notificationEnabled) {
-    notify('休息结束 ☕', '休息好了吗？回来开始新一轮专注吧')
+    notify(t('notify.breakDoneTitle'), t('notify.breakDoneBody'))
   }
 }
 
@@ -99,25 +106,34 @@ function handleStartBreak() {
   timer.startBreak()
 }
 
-/* ---- 浏览器标签标题随倒计时联动（切到后台也能看到剩余时间） ---- */
+/** 语言切换器变更 */
+function handleLocaleChange(event) {
+  setLocale(event.target.value)
+}
+
+/* ---- 浏览器标签标题随倒计时联动（切到后台也能看到剩余时间） ----
+   监听 locale：切换语言后标题文案即时更新 */
 watch(
-  () => [timer.phase.value, timer.running.value, timer.remaining.value],
+  () => [timer.phase.value, timer.running.value, timer.remaining.value, locale.value],
   ([phase, running, remaining]) => {
     if (phase === PHASE_IDLE) {
-      document.title = DEFAULT_TITLE
+      document.title = defaultTitle.value
     } else if (running) {
       const icon = phase === PHASE_FOCUS ? '🍅' : '☕'
-      const label = phase === PHASE_FOCUS ? '专注中' : '休息中'
+      const label =
+        phase === PHASE_FOCUS
+          ? t('timer.phase.focusing')
+          : t('timer.phase.breaking')
       document.title = `${icon} ${formatClock(remaining)} ${label}`
     } else {
-      document.title = `⏸ ${formatClock(remaining)} 已暂停`
+      document.title = `⏸ ${formatClock(remaining)} ${t('timer.phase.paused')}`
     }
   }
 )
 
 // 挂载后兜底设置一次标题
 onMounted(() => {
-  document.title = DEFAULT_TITLE
+  document.title = defaultTitle.value
 })
 </script>
 
@@ -134,21 +150,38 @@ onMounted(() => {
         <img :src="faviconUrl" alt="" class="h-10 w-10" />
         <div>
           <h1 class="text-xl font-bold text-tomato-700 sm:text-2xl">
-            番茄专注计时器
+            {{ t('app.title') }}
           </h1>
           <p class="text-xs text-gray-400 sm:text-sm">
-            多任务番茄钟 · 按任务统计专注时长 · 数据仅保存在本机
+            {{ t('app.subtitle') }}
           </p>
         </div>
       </div>
-      <button
-        type="button"
-        class="btn-ghost"
-        aria-label="打开设置"
-        @click.stop="settingsOpen = true"
-      >
-        ⚙ 设置
-      </button>
+      <div class="flex items-center gap-2">
+        <!-- 语言切换器：原生 select，展示各语言原生名称 -->
+        <select
+          :value="locale"
+          class="btn-ghost cursor-pointer appearance-none text-sm"
+          :aria-label="t('app.language')"
+          @change="handleLocaleChange"
+        >
+          <option
+            v-for="l in SUPPORTED_LOCALES"
+            :key="l.code"
+            :value="l.code"
+          >
+            {{ l.name }}
+          </option>
+        </select>
+        <button
+          type="button"
+          class="btn-ghost"
+          :aria-label="t('app.settingsAriaLabel')"
+          @click.stop="settingsOpen = true"
+        >
+          {{ t('app.settings') }}
+        </button>
+      </div>
     </header>
 
     <!-- 主体：大屏左右两栏，小屏上下堆叠 -->
@@ -174,18 +207,24 @@ onMounted(() => {
     <!-- 页脚说明（同时承载 SEO 长尾文案） -->
     <footer class="mt-8 text-center text-xs leading-relaxed text-gray-400">
       <p>
-        番茄工作法：专注 {{ settings.focusMinutes }} 分钟后休息
-        {{ settings.breakMinutes }} 分钟，每完成一轮专注自动为任务累计一个番茄 🍅
+        {{
+          t('app.footerPomodoro', {
+            focus: settings.focusMinutes,
+            break: settings.breakMinutes
+          })
+        }}
       </p>
       <p class="mt-1">
-        所有任务与设置均保存在浏览器本地（localStorage），无需注册、无需联网，可离线使用。
+        {{ t('app.footerStorage') }}
       </p>
     </footer>
 
-    <!-- 禁用 JavaScript 时的降级提示 -->
+    <!-- 禁用 JavaScript 时的降级提示（此时 Vue 不会运行，静态双语展示） -->
     <noscript>
       <p style="text-align: center; padding: 16px">
-        番茄专注计时器需要启用 JavaScript 才能运行，请在浏览器设置中开启后刷新页面。
+        番茄专注计时器需要启用 JavaScript 才能运行，请在浏览器设置中开启后刷新页面。<br />
+        Pomodoro Focus Timer requires JavaScript. Please enable it in your
+        browser settings and refresh the page.
       </p>
     </noscript>
 

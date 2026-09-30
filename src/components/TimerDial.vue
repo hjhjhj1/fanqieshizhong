@@ -1,5 +1,6 @@
 <script setup>
-import { ref, computed, watch } from 'vue'
+import { ref, computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { formatClock } from '../utils/time.js'
 import { PHASE_IDLE, PHASE_FOCUS, PHASE_BREAK } from '../composables/useTimer.js'
 
@@ -10,6 +11,8 @@ import { PHASE_IDLE, PHASE_FOCUS, PHASE_BREAK } from '../composables/useTimer.js
  * - 空闲态可通过 tab 切换"专注/休息"模式，决定预览时长与启动哪种计时
  * - 底部按阶段/运行状态渲染不同控制按钮
  */
+
+const { t } = useI18n()
 
 const props = defineProps({
   /** 当前阶段 */
@@ -57,15 +60,19 @@ const displaySeconds = computed(() =>
   props.phase === PHASE_IDLE ? idlePreviewSeconds.value : props.remaining
 )
 
-/** 阶段中文标签 */
+/** 阶段标签（随语言切换） */
 const phaseLabel = computed(() => {
   switch (props.phase) {
     case PHASE_FOCUS:
-      return props.running ? '专注中' : '已暂停'
+      return props.running ? t('timer.phase.focusing') : t('timer.phase.paused')
     case PHASE_BREAK:
-      return props.running ? '休息中' : '休息已暂停'
+      return props.running
+        ? t('timer.phase.breaking')
+        : t('timer.phase.breakPaused')
     default:
-      return idleMode.value === 'break' ? '休息准备' : '专注准备'
+      return idleMode.value === 'break'
+        ? t('timer.phase.breakReady')
+        : t('timer.phase.focusReady')
   }
 })
 
@@ -105,14 +112,14 @@ const canStartBreak = computed(() => props.phase === PHASE_IDLE && idleMode.valu
 
 <template>
   <section class="card flex flex-col items-center px-6 py-8 sm:px-10" aria-labelledby="timer-title">
-    <h2 id="timer-title" class="sr-only">番茄计时器</h2>
+    <h2 id="timer-title" class="sr-only">{{ t('timer.srTitle') }}</h2>
 
     <!-- 空闲态：专注 / 休息 模式切换 -->
     <div
       v-if="phase === 'idle'"
       class="mb-1 inline-flex rounded-full bg-black/5 p-1"
       role="tablist"
-      aria-label="计时模式"
+      :aria-label="t('timer.modeLabel')"
     >
       <button
         type="button"
@@ -126,7 +133,7 @@ const canStartBreak = computed(() => props.phase === PHASE_IDLE && idleMode.valu
         "
         @click="idleMode = 'focus'"
       >
-        🍅 专注
+        {{ t('timer.focusTab') }}
       </button>
       <button
         type="button"
@@ -140,7 +147,7 @@ const canStartBreak = computed(() => props.phase === PHASE_IDLE && idleMode.valu
         "
         @click="idleMode = 'break'"
       >
-        ☕ 休息
+        {{ t('timer.breakTab') }}
       </button>
     </div>
 
@@ -182,15 +189,15 @@ const canStartBreak = computed(() => props.phase === PHASE_IDLE && idleMode.valu
         <p
           class="text-5xl font-semibold tabular-nums tracking-tight text-gray-800"
           aria-live="polite"
-          :aria-label="`剩余 ${formatClock(displaySeconds)}`"
+          :aria-label="t('timer.remaining', { time: formatClock(displaySeconds) })"
         >
           {{ formatClock(displaySeconds) }}
         </p>
         <p class="mt-2 max-w-[12rem] truncate text-sm text-gray-400">
-          <template v-if="phase === 'focus'">🎯 {{ taskName || '未命名任务' }}</template>
-          <template v-else-if="phase === 'break'">放松一下，喝口水吧</template>
-          <template v-else-if="idleMode === 'break'">随时可以开始休息</template>
-          <template v-else>{{ taskName ? '🎯 ' + taskName : '请在右侧选择一条任务' }}</template>
+          <template v-if="phase === 'focus'">🎯 {{ taskName || t('timer.unnamedTask') }}</template>
+          <template v-else-if="phase === 'break'">{{ t('timer.breakHint') }}</template>
+          <template v-else-if="idleMode === 'break'">{{ t('timer.idleBreakHint') }}</template>
+          <template v-else>{{ taskName ? '🎯 ' + taskName : t('timer.selectTaskHint') }}</template>
         </p>
       </div>
     </div>
@@ -205,7 +212,7 @@ const canStartBreak = computed(() => props.phase === PHASE_IDLE && idleMode.valu
         :disabled="!canStartFocus"
         @click="emit('start')"
       >
-        ▶ 开始专注
+        {{ t('timer.startFocus') }}
       </button>
 
       <!-- 空闲 + 休息模式：开始休息 -->
@@ -216,49 +223,49 @@ const canStartBreak = computed(() => props.phase === PHASE_IDLE && idleMode.valu
         :disabled="!canStartBreak"
         @click="emit('start-break')"
       >
-        ▶ 开始休息
+        {{ t('timer.startBreak') }}
       </button>
 
       <!-- 专注进行中：暂停 / 重置 -->
       <template v-else-if="phase === 'focus' && running">
         <button type="button" class="btn-ghost px-6 py-3" @click="emit('pause')">
-          ⏸ 暂停
+          {{ t('timer.pause') }}
         </button>
         <button type="button" class="btn-ghost px-6 py-3" @click="emit('reset')">
-          ↺ 重置（本轮作废）
+          {{ t('timer.resetVoid') }}
         </button>
       </template>
 
       <!-- 专注暂停：继续 / 重置 -->
       <template v-else-if="phase === 'focus' && !running">
         <button type="button" class="btn-primary px-8 py-3 text-base" @click="emit('resume')">
-          ▶ 继续专注
+          {{ t('timer.resumeFocus') }}
         </button>
         <button type="button" class="btn-ghost px-6 py-3" @click="emit('reset')">
-          ↺ 重置（本轮作废）
+          {{ t('timer.resetVoid') }}
         </button>
       </template>
 
       <!-- 休息进行中：暂停 / 提前结束 -->
       <template v-else-if="phase === 'break' && running">
         <button type="button" class="btn-ghost px-6 py-3" @click="emit('pause')">
-          ⏸ 暂停
+          {{ t('timer.pause') }}
         </button>
         <button type="button" class="btn-ghost px-6 py-3" @click="emit('skip')">
-          ⏹ 提前结束休息
+          {{ t('timer.skipBreak') }}
         </button>
       </template>
 
       <!-- 休息暂停：继续 / 重置 / 提前结束 -->
       <template v-else-if="phase === 'break' && !running">
         <button type="button" class="btn-leaf px-8 py-3 text-base" @click="emit('resume')">
-          ▶ 继续休息
+          {{ t('timer.resumeBreak') }}
         </button>
         <button type="button" class="btn-ghost px-6 py-3" @click="emit('reset')">
-          ↺ 重置
+          {{ t('timer.reset') }}
         </button>
         <button type="button" class="btn-ghost px-6 py-3" @click="emit('skip')">
-          ⏹ 提前结束休息
+          {{ t('timer.skipBreak') }}
         </button>
       </template>
     </div>

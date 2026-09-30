@@ -1,5 +1,6 @@
 <script setup>
 import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 import {
   useSettings,
   SOUND_OPTIONS,
@@ -15,6 +16,8 @@ import { useNotification } from '../composables/useNotification.js'
  * - 桌面通知开关、申请权限、发送测试通知
  * - 恢复默认设置
  */
+
+const { t } = useI18n()
 
 const props = defineProps({
   /** 弹窗是否打开（v-model:open） */
@@ -89,17 +92,17 @@ function handleReset() {
   resetSettings()
 }
 
-/** 权限状态对应的说明文案 */
+/** 权限状态对应的说明文案（随语言切换） */
 const permissionHint = computed(() => {
   switch (permission.value) {
     case 'granted':
-      return '已授权，专注与休息结束时将弹出桌面通知'
+      return t('settings.permission.granted')
     case 'denied':
-      return '通知权限已被浏览器拒绝，请在浏览器站点设置中手动开启'
+      return t('settings.permission.denied')
     case 'unsupported':
-      return '当前浏览器不支持桌面通知'
+      return t('settings.permission.unsupported')
     default:
-      return '尚未授权，开启后可在标签页后台时收到提醒'
+      return t('settings.permission.defaultHint')
   }
 })
 </script>
@@ -121,12 +124,12 @@ const permissionHint = computed(() => {
           <!-- 标题栏 -->
           <header class="mb-5 flex items-center justify-between">
             <h2 id="settings-title" class="text-lg font-semibold text-gray-800">
-              设置
+              {{ t('settings.title') }}
             </h2>
             <button
               type="button"
               class="rounded-full p-2 text-gray-400 transition hover:bg-black/5 hover:text-gray-600"
-              aria-label="关闭设置"
+              :aria-label="t('settings.close')"
               @click="close"
             >
               ✕
@@ -135,10 +138,10 @@ const permissionHint = computed(() => {
 
           <!-- 计时时长 -->
           <fieldset class="mb-6">
-            <legend class="mb-3 text-sm font-semibold text-gray-700">计时时长</legend>
+            <legend class="mb-3 text-sm font-semibold text-gray-700">{{ t('settings.durationLegend') }}</legend>
             <div class="grid grid-cols-2 gap-4">
               <label class="block">
-                <span class="mb-1.5 block text-xs text-gray-500">专注时长（分钟）</span>
+                <span class="mb-1.5 block text-xs text-gray-500">{{ t('settings.focusMinutes') }}</span>
                 <input
                   type="number"
                   class="input tabular-nums"
@@ -148,11 +151,11 @@ const permissionHint = computed(() => {
                   @change="updateSetting('focusMinutes', $event.target.value)"
                 />
                 <span class="mt-1 block text-[11px] text-gray-400">
-                  范围 {{ DURATION_LIMITS.focus.min }}~{{ DURATION_LIMITS.focus.max }} 分钟
+                  {{ t('settings.rangeHint', { min: DURATION_LIMITS.focus.min, max: DURATION_LIMITS.focus.max }) }}
                 </span>
               </label>
               <label class="block">
-                <span class="mb-1.5 block text-xs text-gray-500">休息时长（分钟）</span>
+                <span class="mb-1.5 block text-xs text-gray-500">{{ t('settings.breakMinutes') }}</span>
                 <input
                   type="number"
                   class="input tabular-nums"
@@ -162,7 +165,7 @@ const permissionHint = computed(() => {
                   @change="updateSetting('breakMinutes', $event.target.value)"
                 />
                 <span class="mt-1 block text-[11px] text-gray-400">
-                  范围 {{ DURATION_LIMITS.break.min }}~{{ DURATION_LIMITS.break.max }} 分钟
+                  {{ t('settings.rangeHint', { min: DURATION_LIMITS.break.min, max: DURATION_LIMITS.break.max }) }}
                 </span>
               </label>
             </div>
@@ -170,11 +173,11 @@ const permissionHint = computed(() => {
 
           <!-- 提示音 -->
           <fieldset class="mb-6">
-            <legend class="mb-3 text-sm font-semibold text-gray-700">提示音</legend>
+            <legend class="mb-3 text-sm font-semibold text-gray-700">{{ t('settings.soundLegend') }}</legend>
 
             <!-- 提示音开关 -->
             <div class="mb-3 flex items-center justify-between">
-              <span class="text-sm text-gray-600">阶段结束时播放提示音</span>
+              <span class="text-sm text-gray-600">{{ t('settings.soundToggle') }}</span>
               <button
                 type="button"
                 role="switch"
@@ -194,19 +197,19 @@ const permissionHint = computed(() => {
               :class="settings.soundEnabled ? '' : 'pointer-events-none opacity-40'"
             >
               <label class="block">
-                <span class="sr-only">提示音类型</span>
+                <span class="sr-only">{{ t('settings.soundType') }}</span>
                 <select
                   class="input cursor-pointer appearance-none bg-white pr-8"
                   :value="settings.soundType"
                   @change="updateSetting('soundType', $event.target.value)"
                 >
                   <option v-for="opt in SOUND_OPTIONS" :key="opt.value" :value="opt.value">
-                    {{ opt.label }}
+                    {{ t('sounds.' + opt.value) }}
                   </option>
                 </select>
               </label>
               <button type="button" class="btn-ghost shrink-0" @click="handlePreview">
-                🔊 试听
+                {{ t('settings.preview') }}
               </button>
             </div>
 
@@ -216,7 +219,7 @@ const permissionHint = computed(() => {
               :class="settings.soundEnabled ? '' : 'pointer-events-none opacity-40'"
             >
               <span class="mb-1.5 flex items-center justify-between text-xs text-gray-500">
-                <span>音量</span>
+                <span>{{ t('settings.volume') }}</span>
                 <span class="tabular-nums">{{ Math.round(settings.volume * 100) }}%</span>
               </span>
               <input
@@ -233,10 +236,10 @@ const permissionHint = computed(() => {
 
           <!-- 桌面通知 -->
           <fieldset class="mb-6">
-            <legend class="mb-3 text-sm font-semibold text-gray-700">桌面通知</legend>
+            <legend class="mb-3 text-sm font-semibold text-gray-700">{{ t('settings.notifyLegend') }}</legend>
 
             <div class="mb-2 flex items-center justify-between">
-              <span class="text-sm text-gray-600">开启桌面通知提醒</span>
+              <span class="text-sm text-gray-600">{{ t('settings.notifyToggle') }}</span>
               <button
                 type="button"
                 role="switch"
@@ -262,7 +265,7 @@ const permissionHint = computed(() => {
                 class="btn-ghost"
                 @click="handleRequestPermission"
               >
-                申请通知权限
+                {{ t('settings.requestPermission') }}
               </button>
               <button
                 type="button"
@@ -270,7 +273,7 @@ const permissionHint = computed(() => {
                 :disabled="!notificationSupported || permission !== 'granted'"
                 @click="handleTestNotification"
               >
-                发送测试通知
+                {{ t('settings.sendTest') }}
               </button>
             </div>
           </fieldset>
@@ -278,9 +281,9 @@ const permissionHint = computed(() => {
           <!-- 底部操作 -->
           <footer class="flex items-center justify-between border-t border-black/5 pt-4">
             <button type="button" class="text-xs text-gray-400 hover:text-tomato-600" @click="handleReset">
-              恢复默认设置
+              {{ t('settings.resetDefaults') }}
             </button>
-            <button type="button" class="btn-primary" @click="close">完成</button>
+            <button type="button" class="btn-primary" @click="close">{{ t('settings.done') }}</button>
           </footer>
         </div>
       </div>

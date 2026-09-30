@@ -1,5 +1,6 @@
 <script setup>
 import { ref, computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { useTasks } from '../composables/useTasks.js'
 import { formatDurationHuman } from '../utils/time.js'
 
@@ -10,6 +11,8 @@ import { formatDurationHuman } from '../utils/time.js'
  * - 每条任务展示：名称、完成番茄轮次 🍅、累计专注时长
  * - 计时进行中通过 disabled 锁定选择与删除，避免统计归属错乱
  */
+
+const { t } = useI18n()
 
 const props = defineProps({
   /** 计时进行中为 true，锁定列表交互 */
@@ -69,12 +72,12 @@ function handleSelect(id) {
   <section class="card flex h-full flex-col p-5 sm:p-6" aria-labelledby="tasks-title">
     <header class="mb-4 flex items-center justify-between">
       <h2 id="tasks-title" class="text-lg font-semibold text-tomato-700">
-        任务列表
+        {{ t('tasks.title') }}
       </h2>
       <span
         class="rounded-full bg-tomato-50 px-3 py-1 text-xs font-medium text-tomato-600"
       >
-        共 🍅 {{ totalTomatoCount }} 轮
+        {{ t('tasks.totalRounds', { count: totalTomatoCount }) }}
       </span>
     </header>
 
@@ -88,16 +91,16 @@ function handleSelect(id) {
         class="input"
         type="text"
         maxlength="50"
-        placeholder="输入任务名称，如：阅读 30 页"
+        :placeholder="t('tasks.placeholder')"
         :disabled="disabled"
-        aria-label="新任务名称"
+        :aria-label="t('tasks.inputLabel')"
       />
       <button
         class="btn-primary shrink-0"
         type="submit"
         :disabled="disabled"
       >
-        添加
+        {{ t('tasks.add') }}
       </button>
     </form>
     <p
@@ -148,7 +151,7 @@ function handleSelect(id) {
               {{ task.name }}
             </span>
             <span class="mt-0.5 block text-xs text-gray-400">
-              🍅 {{ task.tomatoCount }} 轮 · 专注 {{ formatDurationHuman(task.totalFocusSeconds) }}
+              {{ t('tasks.stats', { count: task.tomatoCount, duration: formatDurationHuman(task.totalFocusSeconds) }) }}
             </span>
           </span>
 
@@ -157,8 +160,8 @@ function handleSelect(id) {
             type="button"
             class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-lg text-black/30 transition hover:bg-tomato-50 hover:text-tomato-600 disabled:cursor-not-allowed disabled:opacity-40"
             :disabled="disabled"
-            :aria-label="`删除任务 ${task.name}`"
-            title="删除任务"
+            :aria-label="t('tasks.deleteLabel', { name: task.name })"
+            :title="t('tasks.deleteTitle')"
             @click.stop="handleRemove(task.id)"
           >
             ✕
@@ -172,8 +175,8 @@ function handleSelect(id) {
       v-if="isEmpty"
       class="mt-2 rounded-xl border border-dashed border-black/10 bg-black/[0.02] px-4 py-8 text-center"
     >
-      <p class="text-sm text-gray-400">还没有任务</p>
-      <p class="mt-1 text-xs text-gray-400">在上方输入一条任务，开始你的第一个番茄钟 🍅</p>
+      <p class="text-sm text-gray-400">{{ t('tasks.emptyTitle') }}</p>
+      <p class="mt-1 text-xs text-gray-400">{{ t('tasks.emptyHint') }}</p>
     </div>
   </section>
 </template>

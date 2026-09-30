@@ -12,7 +12,8 @@
     "test:watch": "vitest"
   },
   "dependencies": {
-    "vue": "^3.5.43"
+    "vue": "^3.5.43",
+    "vue-i18n": "^11.4.12"
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.3.3",
