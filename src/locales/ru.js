@@ -74,6 +74,7 @@ export default {
     notifyLegend: 'Уведомления рабочего стола',
     notifyToggle: 'Включить уведомления рабочего стола',
     requestPermission: 'Запросить разрешение',
+    requesting: 'Запрос…',
     sendTest: 'Отправить тестовое уведомление',
     resetDefaults: 'Сбросить настройки',
     done: 'Готово',

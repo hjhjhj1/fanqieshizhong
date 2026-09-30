@@ -23,11 +23,14 @@ export function useNotification() {
    */
   async function requestPermission() {
     if (!supported) {
+      console.warn('[notification] 当前环境不支持 Notification API')
       permission.value = 'unsupported'
       return permission.value
     }
+    console.log('[notification] 调用 requestPermission，当前权限:', Notification.permission)
     // 部分旧版 Safari 使用回调形式，统一包成 Promise
     const result = await Notification.requestPermission()
+    console.log('[notification] 权限申请结果:', result)
     permission.value = result
     return result
   }

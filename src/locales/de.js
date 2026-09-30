@@ -75,6 +75,7 @@ export default {
     notifyLegend: 'Desktop-Benachrichtigungen',
     notifyToggle: 'Desktop-Benachrichtigungen aktivieren',
     requestPermission: 'Berechtigung anfordern',
+    requesting: 'Anfordern…',
     sendTest: 'Testbenachrichtigung senden',
     resetDefaults: 'Auf Standard zurücksetzen',
     done: 'Fertig',

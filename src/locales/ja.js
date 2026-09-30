@@ -74,6 +74,7 @@ export default {
     notifyLegend: 'デスクトップ通知',
     notifyToggle: 'デスクトップ通知を有効化',
     requestPermission: '通知権限をリクエスト',
+    requesting: 'リクエスト中…',
     sendTest: 'テスト通知を送信',
     resetDefaults: 'デフォルトに戻す',
     done: '完了',

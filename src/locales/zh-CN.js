@@ -74,6 +74,7 @@ export default {
     notifyLegend: '桌面通知',
     notifyToggle: '开启桌面通知提醒',
     requestPermission: '申请通知权限',
+    requesting: '申请中…',
     sendTest: '发送测试通知',
     resetDefaults: '恢复默认设置',
     done: '完成',

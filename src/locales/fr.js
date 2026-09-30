@@ -74,6 +74,7 @@ export default {
     notifyLegend: 'Notifications de bureau',
     notifyToggle: 'Activer les notifications de bureau',
     requestPermission: "Demander l'autorisation",
+    requesting: 'Demande…',
     sendTest: 'Envoyer une notification test',
     resetDefaults: 'Restaurer les valeurs par défaut',
     done: 'Terminé',

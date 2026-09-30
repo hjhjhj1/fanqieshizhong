@@ -74,6 +74,7 @@ export default {
     notifyLegend: 'Thông báo màn hình',
     notifyToggle: 'Bật thông báo màn hình',
     requestPermission: 'Xin quyền thông báo',
+    requesting: 'Đang yêu cầu…',
     sendTest: 'Gửi thông báo thử',
     resetDefaults: 'Khôi phục mặc định',
     done: 'Xong',

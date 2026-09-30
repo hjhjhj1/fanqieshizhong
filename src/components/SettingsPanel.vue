@@ -1,5 +1,5 @@
 <script setup>
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import {
   useSettings,
@@ -71,11 +71,28 @@ async function handleToggleNotification() {
   }
 }
 
+/** 申请权限按钮的 loading 状态 */
+const requesting = ref(false)
+
 /**
  * 点击"申请权限"按钮
+ * 加 loading 反馈；若浏览器未弹框（结果仍为 default），提示用户检查浏览器通知设置
  */
 async function handleRequestPermission() {
-  await requestPermission()
+  if (requesting.value) return
+  requesting.value = true
+  try {
+    const result = await requestPermission()
+    console.log('[settings] 权限申请返回:', result)
+    if (result === 'default') {
+      // 浏览器未弹出权限请求框，通常是浏览器全局禁用了通知
+      console.warn('[settings] 浏览器未弹出权限请求框，可能通知被浏览器全局禁用')
+    }
+  } catch (err) {
+    console.error('[settings] 申请权限异常:', err)
+  } finally {
+    requesting.value = false
+  }
 }
 
 /**
@@ -258,14 +275,15 @@ const permissionHint = computed(() => {
             <p class="mb-3 text-xs leading-relaxed text-gray-400">{{ permissionHint }}</p>
 
             <div class="flex gap-2">
-              <!-- 未授权时显示申请按钮 -->
+              <!-- 未授权时显示申请按钮：loading 时禁用并显示申请中 -->
               <button
                 v-if="notificationSupported && permission === 'default'"
                 type="button"
                 class="btn-ghost"
+                :disabled="requesting"
                 @click="handleRequestPermission"
               >
-                {{ t('settings.requestPermission') }}
+                {{ requesting ? t('settings.requesting') : t('settings.requestPermission') }}
               </button>
               <button
                 type="button"
