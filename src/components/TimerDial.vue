@@ -233,7 +233,7 @@ const canStartBreak = computed(() => props.phase === PHASE_IDLE && idleMode.valu
           {{ t('timer.pause') }}
         </button>
         <button type="button" class="btn-primary px-6 py-2.5" @click="emit('complete')">
-          ✅ {{ t('timer.complete') }}
+          ✓ {{ t('timer.complete') }}
         </button>
         <button
           type="button"
@@ -250,7 +250,7 @@ const canStartBreak = computed(() => props.phase === PHASE_IDLE && idleMode.valu
           {{ t('timer.resumeFocus') }}
         </button>
         <button type="button" class="btn-primary px-6 py-2.5" @click="emit('complete')">
-          ✅ {{ t('timer.complete') }}
+          ✓ {{ t('timer.complete') }}
         </button>
         <button
           type="button"
