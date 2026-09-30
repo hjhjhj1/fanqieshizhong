@@ -4,9 +4,11 @@ import { useI18n } from 'vue-i18n'
 import TaskList from './components/TaskList.vue'
 import TimerDial from './components/TimerDial.vue'
 import SettingsPanel from './components/SettingsPanel.vue'
+import StatsChart from './components/StatsChart.vue'
 import { useTasks } from './composables/useTasks.js'
 import { useSettings } from './composables/useSettings.js'
-import { useTimer, PHASE_IDLE, PHASE_FOCUS } from './composables/useTimer.js'
+import { useStats } from './composables/useStats.js'
+import { useTimer, PHASE_IDLE, PHASE_FOCUS, PHASE_BREAK } from './composables/useTimer.js'
 import { useSound } from './composables/useSound.js'
 import { useNotification } from './composables/useNotification.js'
 import { formatClock } from './utils/time.js'
@@ -21,11 +23,53 @@ import { SUPPORTED_LOCALES, setLocale } from './i18n/index.js'
 const { t, locale } = useI18n()
 const { tasks, selectedId, selectedTask, addFocusRecord } = useTasks()
 const { settings } = useSettings()
-const { unlock, play } = useSound()
-const { notify } = useNotification()
+const { addFocusRecord: addStatsRecord } = useStats()
+const { unlock, play, playLoop } = useSound()
+const { notify, permission, requestPermission } = useNotification()
 
 /** 设置弹窗开关 */
 const settingsOpen = ref(false)
+
+/** 响铃中标记：阶段结束后持续响铃，用户可手动停止，最长 60 秒自动停止 */
+const ringing = ref(false)
+/** 当前响铃的停止函数 */
+let stopRingFn = null
+
+/**
+ * 触发持续响铃（阶段结束时调用）
+ * 若 soundEnabled 关闭则不响
+ */
+function startRinging() {
+  if (!settings.soundEnabled) return
+  // 先停掉上一次的响铃（理论上不会重叠，防御性处理）
+  stopRinging()
+  stopRingFn = playLoop(settings.soundType, settings.volume, 60000)
+  ringing.value = true
+}
+
+/** 停止响铃（用户点击停止按钮，或新计时开始时自动调用） */
+function stopRinging() {
+  if (stopRingFn) {
+    stopRingFn()
+    stopRingFn = null
+  }
+  ringing.value = false
+}
+
+/**
+ * 发送通知的兜底逻辑：
+ * 若通知已开启但权限未授权，先尝试申请（可能因非用户手势被浏览器忽略），
+ * 授权成功后再发通知，保证"开了开关就尽量能收到提醒"。
+ */
+async function notifySafe(title, body) {
+  if (!settings.notificationEnabled) return
+  if (permission.value !== 'granted') {
+    // 非用户手势中申请权限，浏览器可能忽略；但在部分环境仍可成功
+    const result = await requestPermission().catch(() => permission.value)
+    if (result !== 'granted') return
+  }
+  notify(title, body)
+}
 
 /**
  * favicon 地址（使用动态绑定而非模板静态 src，
@@ -49,29 +93,27 @@ function getDurations() {
 
 /**
  * 专注倒计时自然走完：
- * 1) 任务统计 +1 轮、累计专注时长 2) 提示音 3) 桌面通知
+ * 1) 任务统计 +1 轮、累计专注时长 2) 持续响铃（可手动停止） 3) 桌面通知
  * @param {string} taskId 完成专注的任务 ID
  * @param {number} seconds 本轮专注秒数
  */
 function handleFocusComplete(taskId, seconds) {
   if (taskId) addFocusRecord(taskId, seconds)
-  if (settings.soundEnabled) play(settings.soundType, settings.volume)
-  if (settings.notificationEnabled) {
-    notify(
-      t('notify.focusDoneTitle'),
-      t('notify.focusDoneBody', { minutes: settings.breakMinutes })
-    )
-  }
+  // 同步记录到"今日"统计，供历史图表展示
+  addStatsRecord(seconds)
+  startRinging()
+  notifySafe(
+    t('notify.focusDoneTitle'),
+    t('notify.focusDoneBody', { minutes: settings.breakMinutes })
+  )
 }
 
 /**
- * 休息倒计时自然走完：提示音 + 通知
+ * 休息倒计时自然走完：持续响铃 + 通知
  */
 function handleBreakComplete() {
-  if (settings.soundEnabled) play(settings.soundType, settings.volume)
-  if (settings.notificationEnabled) {
-    notify(t('notify.breakDoneTitle'), t('notify.breakDoneBody'))
-  }
+  startRinging()
+  notifySafe(t('notify.breakDoneTitle'), t('notify.breakDoneBody'))
 }
 
 // 创建计时器（自动 tick 模式）
@@ -96,13 +138,36 @@ const dialTaskName = computed(() => {
 
 /* ---- 表盘操作事件转发 ---- */
 
-/** 点击"开始专注" */
-function handleStart() {
-  if (selectedId.value) timer.startFocus(selectedId.value)
+/**
+ * 点击"开始专注"
+ * 在用户手势内申请通知权限（浏览器要求权限申请必须由用户交互触发）
+ */
+async function handleStart() {
+  if (!selectedId.value) return
+  // 通知开启但未授权时，趁用户点击手势申请权限
+  if (
+    settings.notificationEnabled &&
+    permission.value !== 'granted' &&
+    permission.value !== 'denied'
+  ) {
+    await requestPermission().catch(() => {})
+  }
+  stopRinging()
+  timer.startFocus(selectedId.value)
 }
 
-/** 点击"开始休息"（手动休息，不关联任务） */
-function handleStartBreak() {
+/**
+ * 点击"开始休息"（手动休息，不关联任务）
+ */
+async function handleStartBreak() {
+  if (
+    settings.notificationEnabled &&
+    permission.value !== 'granted' &&
+    permission.value !== 'denied'
+  ) {
+    await requestPermission().catch(() => {})
+  }
+  stopRinging()
   timer.startBreak()
 }
 
@@ -186,23 +251,39 @@ onMounted(() => {
 
     <!-- 主体：大屏左右两栏，小屏上下堆叠 -->
     <main class="grid flex-1 gap-5 lg:grid-cols-[1.1fr_0.9fr]">
-      <TimerDial
-        :phase="timer.phase.value"
-        :running="timer.running.value"
-        :remaining="timer.remaining.value"
-        :progress="timer.progress.value"
-        :focus-seconds="settings.focusMinutes * 60"
-        :break-seconds="settings.breakMinutes * 60"
-        :task-name="dialTaskName"
-        @start="handleStart"
-        @start-break="handleStartBreak"
-        @pause="timer.pause"
-        @resume="timer.resume"
-        @reset="timer.reset"
-        @skip="timer.skipBreak"
-      />
+      <div class="flex flex-col gap-3">
+        <TimerDial
+          :phase="timer.phase.value"
+          :running="timer.running.value"
+          :remaining="timer.remaining.value"
+          :progress="timer.progress.value"
+          :focus-seconds="settings.focusMinutes * 60"
+          :break-seconds="settings.breakMinutes * 60"
+          :task-name="dialTaskName"
+          @start="handleStart"
+          @start-break="handleStartBreak"
+          @pause="timer.pause"
+          @resume="timer.resume"
+          @reset="timer.reset"
+          @skip="timer.skipBreak"
+        />
+        <!-- 响铃停止按钮：阶段结束后持续响铃 60 秒，用户可手动停止 -->
+        <button
+          v-if="ringing"
+          type="button"
+          class="btn-primary w-full animate-pulse py-3 text-base"
+          @click="stopRinging"
+        >
+          🔕 {{ t('timer.stopRinging') }}
+        </button>
+      </div>
       <TaskList :disabled="isLocked" />
     </main>
+
+    <!-- 专注统计图表：按天展示历史专注时长 -->
+    <div class="mt-5">
+      <StatsChart />
+    </div>
 
     <!-- 页脚说明（同时承载 SEO 长尾文案） -->
     <footer class="mt-8 text-center text-xs leading-relaxed text-gray-400">

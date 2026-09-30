@@ -42,7 +42,8 @@ export default {
     resumeBreak: '▶ Continuar descanso',
     resetVoid: '↺ Reiniciar (ronda anulada)',
     reset: '↺ Reiniciar',
-    skipBreak: '⏹ Terminar descanso antes'
+    skipBreak: '⏹ Terminar descanso antes',
+    stopRinging: '⏹ Detener sonido'
   },
   tasks: {
     title: 'Lista de tareas',
@@ -106,5 +107,15 @@ export default {
     h: '{h} h',
     m: '{m} min',
     s: '{s} s'
+  },
+  stats: {
+    title: 'Estadísticas de enfoque',
+    totalFocus: '{minutes} min de enfoque',
+    rangeLabel: 'Rango',
+    last7Days: 'Últimos 7 días',
+    last30Days: 'Últimos 30 días',
+    minutes: 'min',
+    empty: 'Aún no hay registros. Completa un pomodoro para ver tu tendencia 📊',
+    chartAriaLabel: 'Gráfico de barras de duración de enfoque'
   }
 }

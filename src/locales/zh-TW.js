@@ -41,7 +41,8 @@ export default {
     resumeBreak: '▶ 繼續休息',
     resetVoid: '↺ 重置（本輪作廢）',
     reset: '↺ 重置',
-    skipBreak: '⏹ 提前結束休息'
+    skipBreak: '⏹ 提前結束休息',
+    stopRinging: '停止響鈴'
   },
   tasks: {
     title: '任務列表',
@@ -101,5 +102,15 @@ export default {
     h: '{h}小時',
     m: '{m}分鐘',
     s: '{s}秒'
+  },
+  stats: {
+    title: '專注統計',
+    totalFocus: '累計專注 {minutes} 分鐘',
+    rangeLabel: '統計範圍',
+    last7Days: '最近 7 天',
+    last30Days: '最近 30 天',
+    minutes: '分鐘',
+    empty: '暫無專注記錄，完成一輪番茄鐘後這裡會展示歷史趨勢 📊',
+    chartAriaLabel: '專注時長長條圖'
   }
 }

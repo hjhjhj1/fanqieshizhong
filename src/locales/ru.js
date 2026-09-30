@@ -42,7 +42,8 @@ export default {
     resumeBreak: '▶ Продолжить отдых',
     resetVoid: '↺ Сброс (раунд не засчитан)',
     reset: '↺ Сброс',
-    skipBreak: '⏹ Завершить отдых досрочно'
+    skipBreak: '⏹ Завершить отдых досрочно',
+    stopRinging: '⏹ Остановить звук'
   },
   tasks: {
     title: 'Список задач',
@@ -106,5 +107,15 @@ export default {
     h: '{h} ч',
     m: '{m} мин',
     s: '{s} с'
+  },
+  stats: {
+    title: 'Статистика фокуса',
+    totalFocus: '{minutes} мин фокуса',
+    rangeLabel: 'Период',
+    last7Days: 'Последние 7 дней',
+    last30Days: 'Последние 30 дней',
+    minutes: 'мин',
+    empty: 'Записей пока нет. Завершите помидор, чтобы увидеть тренд 📊',
+    chartAriaLabel: 'Столбчатая диаграмма длительности фокуса'
   }
 }

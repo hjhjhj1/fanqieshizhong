@@ -42,7 +42,8 @@ export default {
     resumeBreak: '▶ 휴식 계속',
     resetVoid: '↺ 초기화(이번 라운드 무효)',
     reset: '↺ 초기화',
-    skipBreak: '⏹ 휴식 조기 종료'
+    skipBreak: '⏹ 휴식 조기 종료',
+    stopRinging: '⏹ 알람 끄기'
   },
   tasks: {
     title: '작업 목록',
@@ -104,5 +105,15 @@ export default {
     h: '{h}시간',
     m: '{m}분',
     s: '{s}초'
+  },
+  stats: {
+    title: '집중 통계',
+    totalFocus: '총 {minutes}분 집중',
+    rangeLabel: '기간',
+    last7Days: '최근 7일',
+    last30Days: '최근 30일',
+    minutes: '분',
+    empty: '기록이 없습니다. 뽀모도로를 완료하면 추이가 표시됩니다 📊',
+    chartAriaLabel: '집중 시간 막대 그래프'
   }
 }

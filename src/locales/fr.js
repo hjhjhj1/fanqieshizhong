@@ -42,7 +42,8 @@ export default {
     resumeBreak: '▶ Reprendre la pause',
     resetVoid: '↺ Réinitialiser (round annulé)',
     reset: '↺ Réinitialiser',
-    skipBreak: '⏹ Terminer la pause plus tôt'
+    skipBreak: '⏹ Terminer la pause plus tôt',
+    stopRinging: '⏹ Arrêter la sonnerie'
   },
   tasks: {
     title: 'Liste des tâches',
@@ -108,5 +109,15 @@ export default {
     h: '{h} h',
     m: '{m} min',
     s: '{s} s'
+  },
+  stats: {
+    title: 'Statistiques de concentration',
+    totalFocus: '{minutes} min de concentration',
+    rangeLabel: 'Période',
+    last7Days: '7 derniers jours',
+    last30Days: '30 derniers jours',
+    minutes: 'min',
+    empty: 'Aucun enregistrement. Complétez un pomodoro pour voir votre tendance 📊',
+    chartAriaLabel: 'Graphique en barres de la durée de concentration'
   }
 }

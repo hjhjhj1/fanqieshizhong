@@ -42,7 +42,8 @@ export default {
     resumeBreak: '▶ Continuar pausa',
     resetVoid: '↺ Reiniciar (rodada anulada)',
     reset: '↺ Reiniciar',
-    skipBreak: '⏹ Encerrar pausa mais cedo'
+    skipBreak: '⏹ Encerrar pausa mais cedo',
+    stopRinging: '⏹ Parar som'
   },
   tasks: {
     title: 'Lista de tarefas',
@@ -105,5 +106,15 @@ export default {
     h: '{h} h',
     m: '{m} min',
     s: '{s} s'
+  },
+  stats: {
+    title: 'Estatísticas de foco',
+    totalFocus: '{minutes} min de foco',
+    rangeLabel: 'Período',
+    last7Days: 'Últimos 7 dias',
+    last30Days: 'Últimos 30 dias',
+    minutes: 'min',
+    empty: 'Sem registros ainda. Complete um pomodoro para ver sua tendência 📊',
+    chartAriaLabel: 'Gráfico de barras de duração do foco'
   }
 }

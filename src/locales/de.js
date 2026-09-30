@@ -42,7 +42,8 @@ export default {
     resumeBreak: '▶ Pause fortsetzen',
     resetVoid: '↺ Zurücksetzen (Runde verworfen)',
     reset: '↺ Zurücksetzen',
-    skipBreak: '⏹ Pause vorzeitig beenden'
+    skipBreak: '⏹ Pause vorzeitig beenden',
+    stopRinging: '⏹ Klingelton stoppen'
   },
   tasks: {
     title: 'Aufgabenliste',
@@ -109,5 +110,15 @@ export default {
     h: '{h} Std.',
     m: '{m} Min.',
     s: '{s} Sek.'
+  },
+  stats: {
+    title: 'Fokus-Statistik',
+    totalFocus: '{minutes} Min. Fokus',
+    rangeLabel: 'Zeitraum',
+    last7Days: 'Letzte 7 Tage',
+    last30Days: 'Letzte 30 Tage',
+    minutes: 'Min',
+    empty: 'Noch keine Fokusaufzeichnungen. Schließe einen Pomodoro ab, um deinen Trend zu sehen 📊',
+    chartAriaLabel: 'Fokusdauer-Balkendiagramm'
   }
 }

@@ -42,7 +42,8 @@ export default {
     resumeBreak: '▶ 继续休息',
     resetVoid: '↺ 重置（本轮作废）',
     reset: '↺ 重置',
-    skipBreak: '⏹ 提前结束休息'
+    skipBreak: '⏹ 提前结束休息',
+    stopRinging: '停止响铃'
   },
   tasks: {
     title: '任务列表',
@@ -102,5 +103,15 @@ export default {
     h: '{h}小时',
     m: '{m}分钟',
     s: '{s}秒'
+  },
+  stats: {
+    title: '专注统计',
+    totalFocus: '累计专注 {minutes} 分钟',
+    rangeLabel: '统计范围',
+    last7Days: '最近 7 天',
+    last30Days: '最近 30 天',
+    minutes: '分钟',
+    empty: '暂无专注记录，完成一轮番茄钟后这里会展示历史趋势 📊',
+    chartAriaLabel: '专注时长柱状图'
   }
 }

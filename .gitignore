@@ -23,3 +23,6 @@ Thumbs.db
 .vscode/*
 !.vscode/extensions.json
 .idea/
+
+# TRAE 自动生成文档
+.trae/

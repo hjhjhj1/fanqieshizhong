@@ -42,7 +42,8 @@ export default {
     resumeBreak: '▶ Resume Break',
     resetVoid: '↺ Reset (round voided)',
     reset: '↺ Reset',
-    skipBreak: '⏹ End Break Early'
+    skipBreak: '⏹ End Break Early',
+    stopRinging: 'Stop Ringing'
   },
   tasks: {
     title: 'Tasks',
@@ -105,5 +106,15 @@ export default {
     h: '{h}h',
     m: '{m}min',
     s: '{s}s'
+  },
+  stats: {
+    title: 'Focus Stats',
+    totalFocus: '{minutes} min focused',
+    rangeLabel: 'Time range',
+    last7Days: 'Last 7 days',
+    last30Days: 'Last 30 days',
+    minutes: 'min',
+    empty: 'No focus records yet. Complete a Pomodoro to see your trend here 📊',
+    chartAriaLabel: 'Focus duration bar chart'
   }
 }

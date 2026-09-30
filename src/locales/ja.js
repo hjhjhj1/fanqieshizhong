@@ -42,7 +42,8 @@ export default {
     resumeBreak: '▶ 休憩を再開',
     resetVoid: '↺ リセット（このラウンドは無効）',
     reset: '↺ リセット',
-    skipBreak: '⏹ 休憩を早めに終了'
+    skipBreak: '⏹ 休憩を早めに終了',
+    stopRinging: '音を止める'
   },
   tasks: {
     title: 'タスクリスト',
@@ -103,5 +104,15 @@ export default {
     h: '{h}時間',
     m: '{m}分',
     s: '{s}秒'
+  },
+  stats: {
+    title: '集中統計',
+    totalFocus: '合計 {minutes} 分',
+    rangeLabel: '期間',
+    last7Days: '過去 7 日',
+    last30Days: '過去 30 日',
+    minutes: '分',
+    empty: 'まだ記録がありません。ポモドーロを完了するとここに推移が表示されます 📊',
+    chartAriaLabel: '集中時間の棒グラフ'
   }
 }

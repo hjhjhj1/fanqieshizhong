@@ -105,7 +105,7 @@ export function useSound() {
   }
 
   /**
-   * 播放指定类型的提示音
+   * 播放指定类型的提示音（单次）
    * @param {string} type 音色 key，见 SOUND_SCORES
    * @param {number} [volume=0.8] 音量 0~1
    * @returns {boolean} 是否成功发起播放（环境不支持或静音时为 false）
@@ -125,5 +125,58 @@ export function useSound() {
     return true
   }
 
-  return { unlock, play }
+  /**
+   * 循环播放提示音，直到调用返回的 stop 函数或达到最大时长。
+   * 用于阶段结束后的持续响铃，用户可手动停止。
+   * @param {string} type 音色 key
+   * @param {number} [volume=0.8] 音量 0~1
+   * @param {number} [maxDurationMs=60000] 最长响铃毫秒数，默认 60 秒
+   * @returns {() => void} stop 停止响铃的函数（幂等）
+   */
+  function playLoop(type, volume = 0.8, maxDurationMs = 60000) {
+    if (volume <= 0) return () => {}
+    const score = SOUND_SCORES[type] || SOUND_SCORES.beep
+    const ctx = getContext()
+    if (!ctx) return () => {}
+
+    if (ctx.state === 'suspended') {
+      ctx.resume().catch(() => {})
+    }
+
+    // 计算一轮乐谱的总时长（取所有音符中最晚结束的时间）
+    const roundDuration = score.reduce(
+      (max, n) => Math.max(max, n.start + n.duration),
+      0
+    )
+    // 每轮之间留 0.3 秒间隔，避免首尾粘连；最短 0.6 秒一轮
+    const roundSec = Math.max(0.6, roundDuration + 0.3)
+
+    let stopped = false
+    const endAt = Date.now() + maxDurationMs
+    let timeoutId = null
+
+    /** 调度一轮播放并安排下一轮 */
+    function scheduleRound() {
+      if (stopped || Date.now() >= endAt) {
+        stopped = true
+        return
+      }
+      score.forEach((note) => playNote(ctx, note, volume))
+      timeoutId = setTimeout(scheduleRound, roundSec * 1000)
+    }
+
+    scheduleRound()
+
+    /** 停止循环响铃（幂等） */
+    return function stop() {
+      if (stopped) return
+      stopped = true
+      if (timeoutId !== null) {
+        clearTimeout(timeoutId)
+        timeoutId = null
+      }
+    }
+  }
+
+  return { unlock, play, playLoop }
 }

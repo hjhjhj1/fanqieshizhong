@@ -42,7 +42,8 @@ export default {
     resumeBreak: '▶ Tiếp tục nghỉ',
     resetVoid: '↺ Đặt lại (vòng này hủy)',
     reset: '↺ Đặt lại',
-    skipBreak: '⏹ Kết thúc nghỉ sớm'
+    skipBreak: '⏹ Kết thúc nghỉ sớm',
+    stopRinging: '⏹ Dừng chuông'
   },
   tasks: {
     title: 'Danh sách tác vụ',
@@ -104,5 +105,15 @@ export default {
     h: '{h} giờ',
     m: '{m} phút',
     s: '{s} giây'
+  },
+  stats: {
+    title: 'Thống kê tập trung',
+    totalFocus: '{minutes} phút tập trung',
+    rangeLabel: 'Kỳ hạn',
+    last7Days: '7 ngày gần đây',
+    last30Days: '30 ngày gần đây',
+    minutes: 'phút',
+    empty: 'Chưa có ghi chú. Hoàn thành một pomodoro để xem xu hướng 📊',
+    chartAriaLabel: 'Biểu đồ cột thời gian tập trung'
   }
 }
