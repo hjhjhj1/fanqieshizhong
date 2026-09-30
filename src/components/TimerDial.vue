@@ -226,35 +226,35 @@ const canStartBreak = computed(() => props.phase === PHASE_IDLE && idleMode.valu
         {{ t('timer.startBreak') }}
       </button>
 
-      <!-- 专注进行中：暂停 / 完成（绿色突出） / 重置（浅灰弱化） -->
-      <!-- 三按钮同高对齐，仅通过颜色与字号区分权重 -->
+      <!-- 专注进行中：暂停 / 完成（番茄红主按钮） / 重置（浅灰弱化） -->
+      <!-- 三按钮同高对齐，完成用主题色突出，重置用低饱和灰弱化 -->
       <template v-else-if="phase === 'focus' && running">
         <button type="button" class="btn-ghost px-5 py-2.5" @click="emit('pause')">
           {{ t('timer.pause') }}
         </button>
-        <button type="button" class="btn-leaf px-6 py-2.5" @click="emit('complete')">
+        <button type="button" class="btn-primary px-6 py-2.5" @click="emit('complete')">
           ✅ {{ t('timer.complete') }}
         </button>
         <button
           type="button"
-          class="btn-ghost px-4 py-2.5 text-sm text-gray-400 ring-gray-200 hover:bg-gray-50 hover:text-gray-600"
+          class="px-4 py-2.5 text-sm text-gray-400 transition hover:text-gray-600 hover:bg-gray-100/60 rounded-xl"
           @click="emit('reset')"
         >
           {{ t('timer.resetVoid') }}
         </button>
       </template>
 
-      <!-- 专注暂停：继续（红色主） / 完成（绿色突出） / 重置（浅灰弱化） -->
+      <!-- 专注暂停：继续 / 完成 / 重置 -->
       <template v-else-if="phase === 'focus' && !running">
-        <button type="button" class="btn-primary px-7 py-2.5" @click="emit('resume')">
+        <button type="button" class="btn-ghost px-5 py-2.5" @click="emit('resume')">
           {{ t('timer.resumeFocus') }}
         </button>
-        <button type="button" class="btn-leaf px-6 py-2.5" @click="emit('complete')">
+        <button type="button" class="btn-primary px-6 py-2.5" @click="emit('complete')">
           ✅ {{ t('timer.complete') }}
         </button>
         <button
           type="button"
-          class="btn-ghost px-4 py-2.5 text-sm text-gray-400 ring-gray-200 hover:bg-gray-50 hover:text-gray-600"
+          class="px-4 py-2.5 text-sm text-gray-400 transition hover:text-gray-600 hover:bg-gray-100/60 rounded-xl"
           @click="emit('reset')"
         >
           {{ t('timer.resetVoid') }}
